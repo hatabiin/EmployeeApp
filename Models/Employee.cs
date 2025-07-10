@@ -1,13 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace EmployeeApp;
+namespace EmployeeApp.Models;
 
-public partial class Company
+public partial class Employee
 {
     public int Id { get; set; }
 
-    public string CompanyName { get; set; } = null!;
+    public string EmployeeName { get; set; } = null!;
+
+    public string PasswordHash { get; set; } = null!;
 
     public DateTime? CreatedAt { get; set; }
 
@@ -16,4 +18,6 @@ public partial class Company
     public virtual ICollection<Department> Departments { get; set; } = new List<Department>();
 
     public virtual ICollection<Division> Divisions { get; set; } = new List<Division>();
+
+    public virtual ICollection<License> Licenses { get; set; } = new List<License>();
 }
