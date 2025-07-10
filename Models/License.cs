@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace EmployeeApp;
+namespace EmployeeApp.Models;
 
 public partial class License
 {

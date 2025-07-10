@@ -1,25 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace EmployeeApp;
+namespace EmployeeApp.Models;
 
-public partial class Division
+public partial class Department
 {
     public int Id { get; set; }
 
     public int CompanyId { get; set; }
 
-    public int? DepartmentId { get; set; }
-
-    public string DivisionName { get; set; } = null!;
+    public string DapartmentName { get; set; } = null!;
 
     public DateTime? CreatedAt { get; set; }
 
-    public DateTime? UpdateAt { get; set; }
+    public DateTime? UpdatedAt { get; set; }
 
     public virtual Company Company { get; set; } = null!;
 
-    public virtual Department? Department { get; set; }
+    public virtual ICollection<Division> Divisions { get; set; } = new List<Division>();
 
     public virtual ICollection<Employee> Employees { get; set; } = new List<Employee>();
 }
