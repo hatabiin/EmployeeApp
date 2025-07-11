@@ -14,9 +14,9 @@ public class AccountController : Controller
 		return View();
 	}
 	[HttpPost]
-	public ActionResult Login(string employee_id, string password_hash)
+	public ActionResult Login(string employeeId, string password)
 	{
-		if (string.IsNullOrEmpty(employee_id) || string.IsNullOrEmpty(password_hash))
+		if (string.IsNullOrEmpty(employeeId) || string.IsNullOrEmpty(password))
 		{
 			return View();
 		}
