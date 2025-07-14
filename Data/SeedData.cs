@@ -14,12 +14,11 @@ namespace EmployeeApp.Data
                 context.Database.EnsureCreated();
                 Console.WriteLine("データベース確認完了");
 
-                // 既にデータがある場合はスキップ（今は無効化）
-                // if (context.Employees.Any())
-                // {
-                //     Console.WriteLine("既にデータが存在するため、シードをスキップします");
-                //     return;
-                // }
+                if (context.Employees.Any())
+                {
+                    Console.WriteLine("既にデータが存在するため、シードをスキップします");
+                    return;
+                }
 
                 Console.WriteLine("全パターン対応シードデータを開始します...");
 
