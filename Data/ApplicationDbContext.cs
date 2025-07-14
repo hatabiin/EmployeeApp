@@ -68,9 +68,9 @@ public partial class ApplicationDbContext : DbContext
 							.HasDefaultValueSql("CURRENT_TIMESTAMP")
 							.HasColumnType("timestamp")
 							.HasColumnName("created_at");
-			entity.Property(e => e.DapartmentName)
+			entity.Property(e => e.DepartmentName)
 							.HasMaxLength(200)
-							.HasColumnName("dapartment_name");
+							.HasColumnName("department_name");
 			entity.Property(e => e.UpdatedAt)
 							.ValueGeneratedOnAddOrUpdate()
 							.HasDefaultValueSql("CURRENT_TIMESTAMP")

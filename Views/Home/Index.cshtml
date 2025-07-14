@@ -18,11 +18,15 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var employee in Model)
+            @foreach (var employees in Model)
             {
                 <tr>
-                    <td>@employee.Id</td>
-                    <td>@employee.EmployeeName</td>
+                    <td>@employees.Id</td>
+                    <td>@employees.EmployeeName</td>
+                    <td>@string.Join(", ", employees.Departments.Select(d => d.DepartmentName))</td>
+                    <td>@employees.EmployeeName</td>
+                    <td>@employees.EmployeeName</td>
+                    <td>@employees.EmployeeName</td>
                 </tr>
             }
         </tbody>
