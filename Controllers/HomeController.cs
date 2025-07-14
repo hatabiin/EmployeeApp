@@ -22,8 +22,13 @@ public class HomeController : Controller
 
     public async Task<IActionResult> Index()
     {
-        var employees = await _context.Employees.ToListAsync();
-        return View(employees);
+        var employees = await _context.Employees
+            .Include(e => e.Departments)
+            // .Include(e => e.Companies)
+            .Include(e => e.Divisions)
+            .Include(e => e.Licenses)
+            .ToListAsync();
+            return View(employees);
     }
 
     public IActionResult Privacy()

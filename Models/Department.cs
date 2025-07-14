@@ -9,7 +9,7 @@ public partial class Department
 
     public int CompanyId { get; set; }
 
-    public string DapartmentName { get; set; } = null!;
+    public string DepartmentName { get; set; } = null!;
 
     public DateTime? CreatedAt { get; set; }
 
