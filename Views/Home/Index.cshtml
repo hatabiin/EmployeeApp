@@ -18,15 +18,41 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var employees in Model)
+            @foreach (var employee in Model)
             {
                 <tr>
-                    <td>@employees.Id</td>
-                    <td>@employees.EmployeeName</td>
-                    <td>@string.Join(", ", employees.Departments.Select(d => d.DepartmentName))</td>
-                    <td>@employees.EmployeeName</td>
-                    <td>@employees.EmployeeName</td>
-                    <td>@employees.EmployeeName</td>
+                    <td>@employee.Id</td>
+                    <td>@employee.EmployeeName</td>
+                    <td>@if (employee.Departments?.Any() == true)
+                        {
+                            @string.Join(", ", employee.Departments.Select(d => d.DepartmentName))
+                        }
+                        else
+                        {
+                            <span>未配属</span>
+                        }
+                    </td>
+                    <td>
+                        @if (employee.Divisions?.Any() == true)
+                        {
+                            @string.Join(", ", employee.Divisions.Select(d => d.DivisionName))
+                        }
+                        else
+                        {
+                            <span>未配属</span>
+                        }
+                    </td>
+                    <td>
+                        @if (employee.Licenses?.Any() == true)
+                        {
+                            @string.Join(", ", employee.Licenses.Select(l => l.LicenseName))
+                        }
+                        else
+                        {
+                            <span>未保持</span>
+                        }
+                    </td>
+                    <td>@employee.CreatedAt?.ToString("yyyy年MM月dd日")</td>
                 </tr>
             }
         </tbody>
