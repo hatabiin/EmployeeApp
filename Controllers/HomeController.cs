@@ -29,6 +29,26 @@ public class HomeController : Controller
             .ToListAsync();
             return View(employees);
     }
+    public async Task<IActionResult> Detail(int? id)
+    {
+        if (id == null)
+        {
+            return NotFound();
+        }
+
+        var employee = await _context.Employees
+            .Include(e => e.Departments)
+            .Include(e => e.Divisions)
+            .Include(e => e.Licenses)
+            .FirstOrDefaultAsync(e => e.Id == id);
+
+        if (employee == null)
+        {
+            return NotFound();
+        }
+
+            return View(employee);
+    }
 
     public IActionResult Privacy()
     {

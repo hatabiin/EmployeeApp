@@ -1,0 +1,85 @@
+@model EmployeeApp.Models.Employee
+
+@{
+    ViewData["Title"] = "Detail";
+}
+
+<div class="container mt-4">
+    <h2>社員詳細: @Model.EmployeeName</h2>
+    <hr>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4>基本情報</h4>
+        </div>
+        <div class="card-body">
+            <p><strong>社員ID:</strong> @Model.Id</p>
+            <p><strong>氏名:</strong> @Model.EmployeeName</p>
+            <p><strong>登録日:</strong> @Model.CreatedAt?.ToString("yyyy年MM月dd日")</p>
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4>所属部署</h4>
+        </div>
+        <div class="card-body">
+            @if (Model.Departments?.Any() == true)
+            {
+                @foreach (var department in Model.Departments)
+                {
+                    <p>@department.DepartmentName</p>
+                }
+            }
+            else
+            {
+                <p>未配属</p>
+            }
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4>所属課</h4>
+        </div>
+        <div class="card-body">
+            @if (Model.Divisions?.Any() == true)
+            {
+                @foreach (var division in Model.Divisions)
+                {
+                    <p>@division.DivisionName</p>
+                }
+            }
+            else
+            {
+                <p>未配属</p>
+            }
+        </div>
+    </div>
+
+    <div class="card mb-4">
+        <div class="card-header">
+            <h4>保有資格</h4>
+        </div>
+        <div class="card-body">
+            @if (Model.Licenses?.Any() == true)
+            {
+                @foreach (var license in Model.Licenses)
+                {
+                    <span class="badge bg-primary me-2">@license.LicenseName</span>
+                }
+            }
+            else
+            {
+                <p>未保持</p>
+            }
+        </div>
+    </div>
+
+    <!-- ボタン -->
+    <div class="mb-4">
+        <a asp-action="Index" class="btn btn-secondary">戻る</a>
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">編集</a>
+        <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">削除</a>
+    </div>
+</div>
