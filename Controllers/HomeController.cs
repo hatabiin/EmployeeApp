@@ -49,6 +49,23 @@ public class HomeController : Controller
 
             return View(employee);
     }
+    public async Task<IActionResult> Delete(int? id)
+    {
+        if (id == null)
+        {
+            return NotFound();
+        }
+
+        var employee = await _context.Employees.FindAsync(id);
+        if (employee == null)
+        {
+            return NotFound();
+        }
+
+        _context.Employees.Remove(employee);
+        await _context.SaveChangesAsync();
+        return RedirectToAction("Index");
+    }
 
     public IActionResult Privacy()
     {
