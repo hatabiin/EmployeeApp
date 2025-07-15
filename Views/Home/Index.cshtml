@@ -5,7 +5,7 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Welcome</h1>
+    <h1 class="display-4">社員一覧</h1>
     <table class="table">
         <thead>
             <tr>
@@ -53,6 +53,13 @@
                         }
                     </td>
                     <td>@employee.CreatedAt?.ToString("yyyy年MM月dd日")</td>
+                    <td>
+                        <div class="mb-4">
+                            <a asp-action="Index" class="btn btn-secondary">戻る</a>
+                            <a asp-action="Edit" asp-route-id="@employee.Id" class="btn btn-warning">編集</a>
+                            <a asp-action="Delete" asp-route-id="@employee.Id" class="btn btn-danger">削除</a>
+                        </div>
+                    </td>
                 </tr>
             }
         </tbody>
