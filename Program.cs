@@ -13,6 +13,13 @@ builder.Services.AddDbContext<ApplicationDbContext>(
     )
 );
 
+builder.Services.AddAuthentication("Cookies")
+    .AddCookie("Cookies", options =>
+    {
+        options.LoginPath = "/Account/Login";
+        options.LogoutPath = "/Account/Logout";
+    });
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
@@ -33,6 +40,8 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 

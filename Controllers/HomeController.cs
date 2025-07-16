@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EmployeeApp.Controllers;
 
+[Authorize]
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
@@ -27,7 +28,7 @@ public class HomeController : Controller
             .Include(e => e.Divisions)
             .Include(e => e.Licenses)
             .ToListAsync();
-            return View(employees);
+        return View(employees);
     }
 
     [HttpGet]
@@ -52,7 +53,7 @@ public class HomeController : Controller
 
     [HttpPost]
     public async Task<IActionResult> Edit(int id,
-                                          string employeeName, 
+                                          string employeeName,
                                           int[] departmentIds,
                                           int[] divisionIds,
                                           int[] licenseIds)
@@ -73,7 +74,7 @@ public class HomeController : Controller
         var selectedDepartments = await _context.Departments
                                     .Where(d => departmentIds.Contains(d.Id))
                                     .ToListAsync();
-         foreach (var dept in selectedDepartments)
+        foreach (var dept in selectedDepartments)
         {
             employee.Departments.Add(dept);
         }
@@ -96,10 +97,10 @@ public class HomeController : Controller
             employee.Licenses.Add(license);
         }
 
-            await _context.SaveChangesAsync();
-            return RedirectToAction("Index");
+        await _context.SaveChangesAsync();
+        return RedirectToAction("Index");
     }
-    
+
     public async Task<IActionResult> Detail(int? id)
     {
         if (id == null)
