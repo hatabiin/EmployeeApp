@@ -1,0 +1,139 @@
+@model EmployeeApp.Models.Employee
+
+@{
+    ViewData["Title"] = "社員編集";
+}
+
+<div class="container mt-4">
+    <h2>社員編集: @Model.EmployeeName</h2>
+    <hr>
+
+    <!-- 編集フォーム -->
+    <form method="post" asp-action="Edit">
+        
+        <!-- 隠しフィールド：社員ID -->
+        <input type="hidden" name="id" value="@Model.Id" />
+
+        <!-- 基本情報 -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4>基本情報</h4>
+            </div>
+            <div class="card-body">
+                <!-- 氏名 -->
+                <div class="mb-3">
+                    <label for="employeeName" class="form-label">氏名</label>
+                    <input type="text" 
+                           class="form-control" 
+                           id="employeeName" 
+                           name="employeeName" 
+                           value="@Model.EmployeeName" 
+                           required />
+                </div>
+            </div>
+        </div>
+
+        <!-- 所属部署 -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4>所属部署</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    @{
+                        var currentDepartmentIds = Model.Departments.Select(d => d.Id).ToList();
+                    }
+                    @foreach (var dept in ViewBag.allDepartments)
+                    {
+                        <div class="col-md-6 col-lg-4 mb-2">
+                            <div class="form-check">
+                                <input class="form-check-input" 
+                                       type="checkbox" 
+                                       name="departmentIds" 
+                                       value="@dept.Id" 
+                                       id="dept_@dept.Id"
+                                       @(currentDepartmentIds.Contains(dept.Id) ? "checked" : "") />
+                                <label class="form-check-label" for="dept_@dept.Id">
+                                    @dept.DepartmentName
+                                </label>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- 所属課 -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4>所属課</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    @{
+                        var currentDivisionIds = Model.Divisions.Select(d => d.Id).ToList();
+                    }
+                    
+                    @foreach (var div in ViewBag.allDivisions)
+                    {
+                        <div class="col-md-6 col-lg-4 mb-2">
+                            <div class="form-check">
+                                <input class="form-check-input" 
+                                       type="checkbox" 
+                                       name="divisionIds" 
+                                       value="@div.Id" 
+                                       id="div_@div.Id"
+                                       @(currentDivisionIds.Contains(div.Id) ? "checked" : "") />
+                                <label class="form-check-label" for="div_@div.Id">
+                                    @div.DivisionName
+                                </label>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- 保有資格 -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h4>保有資格</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    @{
+                        var currentLicenseIds = Model.Licenses.Select(l => l.Id).ToList();
+                    }
+                    
+                    @foreach (var license in ViewBag.allLicenses)
+                    {
+                        <div class="col-md-6 col-lg-4 mb-2">
+                            <div class="form-check">
+                                <input class="form-check-input" 
+                                       type="checkbox" 
+                                       name="licenseIds" 
+                                       value="@license.Id" 
+                                       id="license_@license.Id"
+                                       @(currentLicenseIds.Contains(license.Id) ? "checked" : "") />
+                                <label class="form-check-label" for="license_@license.Id">
+                                    @license.LicenseName
+                                </label>
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- ボタン -->
+        <div class="mb-4">
+            <button type="submit" class="btn btn-primary">
+                <i class="fas fa-save me-2"></i>保存
+            </button>
+            <button type="button" onclick="history.back()" class="btn btn-secondary">キャンセル</button>
+            <a asp-action="Index" class="btn btn-outline-secondary">
+                <i class="fas fa-list me-2"></i>一覧に戻る
+            </a>
+        </div>
+    </form>
+</div>

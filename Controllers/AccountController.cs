@@ -22,12 +22,9 @@ public class AccountController : Controller
 	[HttpPost]
 	public ActionResult Login(string employeeId, string password)
 	{
-		Console.WriteLine($"ID: '{employeeId}', Pass:'{password}'");
 		var is_id = string.IsNullOrEmpty(employeeId);
 		var is_pass = string.IsNullOrEmpty(password);
 		
-		Console.WriteLine($"is_id: '{is_id}', is_pass:'{is_pass}'");
-
 		if (is_id || is_pass)
 		{
 			ViewBag.Error = "IDまたはパスワードがちがいます";
