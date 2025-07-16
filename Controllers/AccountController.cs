@@ -2,6 +2,8 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using EmployeeApp.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication;
+using System.Security.Claims;
 using EmployeeApp.Data;
 
 namespace EmployeeApp.Controllers;
@@ -20,8 +22,8 @@ public class AccountController : Controller
 		return View();
 	}
 	[HttpPost]
-	public ActionResult Login(string employeeId, string password)
-	{
+    public async Task<ActionResult> Login(string employeeId, string password)
+ 	{
 		var is_id = string.IsNullOrEmpty(employeeId);
 		var is_pass = string.IsNullOrEmpty(password);
 		
@@ -46,7 +48,19 @@ public class AccountController : Controller
 				return View();
 			}
 
-			return RedirectToAction("Index", "Home");
-		}
+// 認証情報を作成
+var claims = new List<Claim>
+{
+    new Claim(ClaimTypes.Name, employee.EmployeeName),
+    new Claim(ClaimTypes.NameIdentifier, employee.Id.ToString())
+};
+
+var claimsIdentity = new ClaimsIdentity(claims, "Cookies");
+var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+
+// 認証状態を記録
+await HttpContext.SignInAsync("Cookies", claimsPrincipal);
+
+return RedirectToAction("Index", "Home");		}
 	}
 }

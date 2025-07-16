@@ -1,5 +1,6 @@
 using EmployeeApp.Data;
 using EmployeeApp.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace EmployeeApp.Data
 {
@@ -9,9 +10,9 @@ namespace EmployeeApp.Data
         {
             try
             {
-                
                 context.Database.EnsureCreated();
 
+                // 既存データを全削除
                 var existingEmployees = context.Employees.ToList();
                 context.Employees.RemoveRange(existingEmployees);
                 
@@ -28,11 +29,24 @@ namespace EmployeeApp.Data
                 context.Companies.RemoveRange(existingCompanies);
                 
                 context.SaveChanges();
+                
+                // AUTO_INCREMENT をリセット
+                try
+                {
+                    context.Database.ExecuteSqlRaw("ALTER TABLE companies AUTO_INCREMENT = 1");
+                    context.Database.ExecuteSqlRaw("ALTER TABLE departments AUTO_INCREMENT = 1");
+                    context.Database.ExecuteSqlRaw("ALTER TABLE divisions AUTO_INCREMENT = 1");
+                    context.Database.ExecuteSqlRaw("ALTER TABLE employees AUTO_INCREMENT = 1");
+                    context.Database.ExecuteSqlRaw("ALTER TABLE licenses AUTO_INCREMENT = 1");
+                }
+                catch { }
 
+                // 会社データ
                 var company = new Company { CompanyName = "テックソリューション株式会社" };
                 context.Companies.Add(company);
                 context.SaveChanges();
 
+                // 部署データ
                 var sales = new Department { CompanyId = company.Id, DepartmentName = "営業部" };
                 var dev = new Department { CompanyId = company.Id, DepartmentName = "開発部" };
                 var admin = new Department { CompanyId = company.Id, DepartmentName = "総務部" };
@@ -42,6 +56,7 @@ namespace EmployeeApp.Data
                 context.Departments.AddRange(sales, dev, admin, planning, quality);
                 context.SaveChanges();
 
+                // 課データ
                 var sales1 = new Division { CompanyId = company.Id, DepartmentId = sales.Id, DivisionName = "営業1課" };
                 var sales2 = new Division { CompanyId = company.Id, DepartmentId = sales.Id, DivisionName = "営業2課" };
                 var overseas = new Division { CompanyId = company.Id, DepartmentId = sales.Id, DivisionName = "海外営業課" };
@@ -56,6 +71,7 @@ namespace EmployeeApp.Data
                 context.Divisions.AddRange(sales1, sales2, overseas, system, web, mobile, hr, accounting, product, qa);
                 context.SaveChanges();
 
+                // 資格データ
                 var basicIT = new License { LicenseName = "基本情報技術者" };
                 var advancedIT = new License { LicenseName = "応用情報技術者" };
                 var boki2 = new License { LicenseName = "簿記2級" };
@@ -68,29 +84,21 @@ namespace EmployeeApp.Data
                 context.Licenses.AddRange(basicIT, advancedIT, boki2, boki1, toeic800, toeic900, license, pmp);
                 context.SaveChanges();
 
-                // 👤 
+                // 社員データ（1人）
                 var testUser = new Employee { EmployeeName = "テストユーザー", PasswordHash = "test123" };
-
                 context.Employees.Add(testUser);
                 context.SaveChanges();
 
-
+                // 関連付け
                 testUser.Departments.Add(sales);
                 testUser.Divisions.Add(sales1);
                 testUser.Licenses.Add(basicIT);
                 testUser.Licenses.Add(license);
 
                 context.SaveChanges();
-                
             }
-            catch (Exception ex)
+            catch
             {
-                
-                if (ex.InnerException != null)
-                {
-                    Console.WriteLine($"内部エラー: {ex.InnerException.Message}");
-                }
-                Console.WriteLine($"詳細: {ex.StackTrace}");
                 throw;
             }
         }
