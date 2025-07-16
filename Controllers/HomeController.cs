@@ -29,6 +29,77 @@ public class HomeController : Controller
             .ToListAsync();
             return View(employees);
     }
+
+    [HttpGet]
+    public async Task<IActionResult> Edit(int? id)
+    {
+        if (id == null)
+        {
+            return NotFound();
+        }
+
+        var employee = await _context.Employees
+            .Include(e => e.Departments)
+            .Include(e => e.Divisions)
+            .Include(e => e.Licenses)
+            .FirstOrDefaultAsync(e => e.Id == id);
+
+        ViewBag.AllDepartments = await _context.Departments.ToListAsync();
+        ViewBag.AllDivisions = await _context.Divisions.ToListAsync();
+        ViewBag.AllLicenses = await _context.Licenses.ToListAsync();
+        return View(employee);
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Edit(int id,
+                                          string employeeName, 
+                                          int[] departmentIds,
+                                          int[] divisionIds,
+                                          int[] licenseIds)
+    {
+        var employee = await _context.Employees
+            .Include(e => e.Departments)
+            .Include(e => e.Divisions)
+            .Include(e => e.Licenses)
+            .FirstOrDefaultAsync(e => e.Id == id);
+
+        if (employee == null)
+        {
+            return NotFound();
+        }
+
+        employee.EmployeeName = employeeName;
+        employee.Departments.Clear();
+        var selectedDepartments = await _context.Departments
+                                    .Where(d => departmentIds.Contains(d.Id))
+                                    .ToListAsync();
+         foreach (var dept in selectedDepartments)
+        {
+            employee.Departments.Add(dept);
+        }
+
+        employee.Divisions.Clear();
+        var selectedDivisions = await _context.Divisions
+                                    .Where(d => divisionIds.Contains(d.Id))
+                                    .ToListAsync();
+        foreach (var div in selectedDivisions)
+        {
+            employee.Divisions.Add(div);
+        }
+
+        employee.Licenses.Clear();
+        var selectedLicenses = await _context.Licenses
+                                    .Where(l => licenseIds.Contains(l.Id))
+                                    .ToListAsync();
+        foreach (var license in selectedLicenses)
+        {
+            employee.Licenses.Add(license);
+        }
+
+            await _context.SaveChangesAsync();
+            return RedirectToAction("Index");
+    }
+    
     public async Task<IActionResult> Detail(int? id)
     {
         if (id == null)
@@ -47,7 +118,7 @@ public class HomeController : Controller
             return NotFound();
         }
 
-            return View(employee);
+        return View(employee);
     }
     public async Task<IActionResult> Delete(int? id)
     {
