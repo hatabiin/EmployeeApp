@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  # MySQLデータベース
+  mysql:
+    image: mysql:8.0
+    container_name: employee_mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: EmployeeManagement
+      MYSQL_USER: empuser
+      MYSQL_PASSWORD: empuser
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+
+  # あなたのASP.NET Coreアプリ
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: employee_web
+    ports:
+      - "5000:5000"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_URLS=http://+:5000
+      - ConnectionStrings__DefaultConnection=server=mysql;database=EmployeeManagement;uid=empuser;pwd=empuser;
+    depends_on:
+      mysql:
+        condition: service_healthy
+    volumes:
+      - .:/src
+
+volumes:
+  mysql_data:
