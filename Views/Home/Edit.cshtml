@@ -12,6 +12,12 @@
         
         <input type="hidden" name="id" value="@Model.Id" />
 
+        @if (ViewBag.Error != null)
+        {
+        <div class="alert alert-danger" role="alert">
+            @ViewBag.Error
+        </div>  
+        }
         <div class="card mb-4">
             <div class="card-header">
                 <h4>基本情報</h4>
