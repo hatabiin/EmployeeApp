@@ -8,19 +8,15 @@
     <h2>社員編集: @Model.EmployeeName</h2>
     <hr>
 
-    <!-- 編集フォーム -->
     <form method="post" asp-action="Edit">
         
-        <!-- 隠しフィールド：社員ID -->
         <input type="hidden" name="id" value="@Model.Id" />
 
-        <!-- 基本情報 -->
         <div class="card mb-4">
             <div class="card-header">
                 <h4>基本情報</h4>
             </div>
             <div class="card-body">
-                <!-- 氏名 -->
                 <div class="mb-3">
                     <label for="employeeName" class="form-label">氏名</label>
                     <input type="text" 
@@ -30,10 +26,23 @@
                            value="@Model.EmployeeName" 
                            required />
                 </div>
+                <div class="mb-3">
+                    <label for="newPassword" class="form-label">新しいパスワード</label>
+                    <input type="password"
+                           class="form-control"
+                           id="newPassword"
+                           name="newPassword" />
+                </div>
+                <div class="mb-3">
+                    <label for="confirmPassword" class="form-label">新しいパスワード（確認）</label>
+                    <input type="password"
+                           class="form-control"
+                           id="confirmPassword"
+                           name="confirmPassword" />
+                </div>
             </div>
         </div>
 
-        <!-- 所属部署 -->
         <div class="card mb-4">
             <div class="card-header">
                 <h4>所属部署</h4>
@@ -63,7 +72,6 @@
             </div>
         </div>
 
-        <!-- 所属課 -->
         <div class="card mb-4">
             <div class="card-header">
                 <h4>所属課</h4>
@@ -94,7 +102,6 @@
             </div>
         </div>
 
-        <!-- 保有資格 -->
         <div class="card mb-4">
             <div class="card-header">
                 <h4>保有資格</h4>

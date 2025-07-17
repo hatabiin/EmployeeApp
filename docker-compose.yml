@@ -21,7 +21,7 @@ services:
   web:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     container_name: employee_web
     ports:
       - "5000:5000"

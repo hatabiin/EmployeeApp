@@ -1,0 +1,16 @@
+# 開発用Dockerfile
+FROM mcr.microsoft.com/dotnet/sdk:8.0
+
+# 作業ディレクトリを設定
+WORKDIR /src
+
+# プロジェクトファイルをコピーしてパッケージ復元
+COPY EmployeeApp.csproj .
+RUN dotnet restore
+
+# ポート5000を公開
+EXPOSE 5000
+
+# 開発用：ホットリロード付きで起動
+# ファイル変更を監視して自動で再起動
+ENTRYPOINT ["dotnet", "watch", "run", "--urls", "http://0.0.0.0:5000"]
