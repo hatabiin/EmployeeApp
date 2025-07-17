@@ -54,6 +54,8 @@ public class HomeController : Controller
     [HttpPost]
     public async Task<IActionResult> Edit(int id,
                                           string employeeName,
+                                          string newPassword,
+                                          string confirmPassword,
                                           int[] departmentIds,
                                           int[] divisionIds,
                                           int[] licenseIds)
@@ -70,6 +72,18 @@ public class HomeController : Controller
         }
 
         employee.EmployeeName = employeeName;
+
+        if (newPassword != confirmPassword)
+        {
+            ViewBag.Error = "パスワードが異なります";
+			return View();
+        }
+
+        if (!string.IsNullOrEmpty(newPassword))
+        {
+            employee.PasswordHash = newPassword;
+        };
+
         employee.Departments.Clear();
         var selectedDepartments = await _context.Departments
                                     .Where(d => departmentIds.Contains(d.Id))

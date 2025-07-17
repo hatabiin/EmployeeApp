@@ -1,7 +1,6 @@
 version: '3.8'
 
 services:
-  # MySQLデータベース
   mysql:
     image: mysql:8.0
     container_name: employee_mysql
@@ -19,11 +18,10 @@ services:
       timeout: 20s
       retries: 10
 
-  # あなたのASP.NET Coreアプリ
   web:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     container_name: employee_web
     ports:
       - "5000:5000"
