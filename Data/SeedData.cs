@@ -85,7 +85,7 @@ namespace EmployeeApp.Data
                 context.SaveChanges();
 
                 // 社員データ（1人）
-                var testUser = new Employee { EmployeeName = "テストユーザー", PasswordHash = "test123" };
+                var testUser = new Employee { EmployeeName = "テストユーザー", PasswordHash = BCrypt.Net.BCrypt.HashPassword("test123") };
                 context.Employees.Add(testUser);
                 context.SaveChanges();
 

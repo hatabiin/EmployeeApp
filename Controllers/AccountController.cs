@@ -48,19 +48,20 @@ public class AccountController : Controller
 				return View();
 			}
 
-// 認証情報を作成
-var claims = new List<Claim>
-{
-    new Claim(ClaimTypes.Name, employee.EmployeeName),
-    new Claim(ClaimTypes.NameIdentifier, employee.Id.ToString())
-};
+			// 認証情報を作成
+			var claims = new List<Claim>
+			{
+				new Claim(ClaimTypes.Name, employee.EmployeeName),
+				new Claim(ClaimTypes.NameIdentifier, employee.Id.ToString())
+			};
 
-var claimsIdentity = new ClaimsIdentity(claims, "Cookies");
-var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
+			var claimsIdentity = new ClaimsIdentity(claims, "Cookies");
+			var claimsPrincipal = new ClaimsPrincipal(claimsIdentity);
 
-// 認証状態を記録
-await HttpContext.SignInAsync("Cookies", claimsPrincipal);
+			// 認証状態を記録
+			await HttpContext.SignInAsync("Cookies", claimsPrincipal);
 
-return RedirectToAction("Index", "Home");		}
+			return RedirectToAction("Index", "Home");		
+    	}
 	}
 }

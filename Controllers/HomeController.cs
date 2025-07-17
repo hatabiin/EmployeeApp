@@ -32,6 +32,84 @@ public class HomeController : Controller
     }
 
     [HttpGet]
+    public async Task<IActionResult> Create()
+    {
+        ViewBag.AllDepartments = await _context.Departments.ToListAsync();
+        ViewBag.AllDivisions = await _context.Divisions.ToListAsync();
+        ViewBag.AllLicenses = await _context.Licenses.ToListAsync();
+        return View();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> Create(string employeeName,
+                                            string newPassword,
+                                            string confirmPassword,
+                                            int[] departmentIds,
+                                            int[] divisionIds,
+                                            int[] licenseIds)
+    {
+        Console.WriteLine("=== Create POST 開始 ===");
+    Console.WriteLine($"名前: '{employeeName}'");
+    Console.WriteLine($"newPassword: '{newPassword}'");
+    Console.WriteLine($"confirmPassword: '{confirmPassword}'");
+
+    
+        if (string.IsNullOrEmpty(newPassword) || string.IsNullOrEmpty(confirmPassword))
+        {
+            ViewBag.Error = "パスワードを入力してください";
+            ViewBag.AllDepartments = await _context.Departments.ToListAsync();
+            ViewBag.AllDivisions = await _context.Divisions.ToListAsync();
+            ViewBag.AllLicenses = await _context.Licenses.ToListAsync();
+            return View();
+        }
+
+        if (newPassword != confirmPassword)
+        {
+            ViewBag.Error = "パスワードが異なります";
+            ViewBag.AllDepartments = await _context.Departments.ToListAsync();
+            ViewBag.AllDivisions = await _context.Divisions.ToListAsync();
+            ViewBag.AllLicenses = await _context.Licenses.ToListAsync();
+            return View();
+        }
+
+        var employee = new Employee
+        {
+            EmployeeName = employeeName,
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword)
+        };
+
+        _context.Employees.Add(employee);
+        await _context.SaveChangesAsync();
+
+        var selectedDepartments = await _context.Departments
+                                    .Where(d => departmentIds.Contains(d.Id))
+                                    .ToListAsync();
+        foreach (var dept in selectedDepartments)
+        {
+            employee.Departments.Add(dept);
+        }
+
+        var selectedDivisions = await _context.Divisions
+                                    .Where(d => divisionIds.Contains(d.Id))
+                                    .ToListAsync();
+        foreach (var div in selectedDivisions)
+        {
+            employee.Divisions.Add(div);
+        }
+
+        var selectedLicenses = await _context.Licenses
+                                    .Where(l => licenseIds.Contains(l.Id))
+                                    .ToListAsync();
+        foreach (var license in selectedLicenses)
+        {
+            employee.Licenses.Add(license);
+        }
+
+        await _context.SaveChangesAsync();
+        return RedirectToAction("Index");
+    }
+
+    [HttpGet]
     public async Task<IActionResult> Edit(int? id)
     {
         if (id == null)
