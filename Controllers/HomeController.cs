@@ -84,7 +84,7 @@ public class HomeController : Controller
 
         if (!string.IsNullOrEmpty(newPassword))
         {
-            employee.PasswordHash = newPassword;
+            employee.PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
         };
 
         employee.Departments.Clear();
