@@ -76,7 +76,10 @@ public class HomeController : Controller
         if (newPassword != confirmPassword)
         {
             ViewBag.Error = "パスワードが異なります";
-			return View();
+            ViewBag.AllDepartments = await _context.Departments.ToListAsync();
+            ViewBag.AllDivisions = await _context.Divisions.ToListAsync();
+            ViewBag.AllLicenses = await _context.Licenses.ToListAsync();
+			return View(employee);
         }
 
         if (!string.IsNullOrEmpty(newPassword))
