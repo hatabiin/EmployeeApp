@@ -42,7 +42,7 @@ public class AccountController : Controller
 				return View();
 			}
 
-			if (employee.PasswordHash != password || employee.PasswordHash == null)
+			if (!BCrypt.Net.BCrypt.Verify(password, employee.PasswordHash) || employee.PasswordHash == null)
 			{
 				ViewBag.Error = "IDまたはパスワードがちがいます";
 				return View();
