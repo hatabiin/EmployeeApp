@@ -22,11 +22,11 @@ public class AccountController : Controller
 		return View();
 	}
 	[HttpPost]
-    public async Task<ActionResult> Login(string employeeId, string password)
- 	{
+	public async Task<ActionResult> Login(string employeeId, string password)
+	{
 		var is_id = string.IsNullOrEmpty(employeeId);
 		var is_pass = string.IsNullOrEmpty(password);
-		
+
 		if (is_id || is_pass)
 		{
 			ViewBag.Error = "IDまたはパスワードがちがいます";
@@ -61,7 +61,14 @@ public class AccountController : Controller
 			// 認証状態を記録
 			await HttpContext.SignInAsync("Cookies", claimsPrincipal);
 
-			return RedirectToAction("Index", "Home");		
-    	}
+			return RedirectToAction("Index", "Home");
+		}
+	}
+
+	[HttpPost]
+	public async Task<ActionResult> Logout()
+	{
+		await HttpContext.SignOutAsync("Cookies");
+		return RedirectToAction("Login", "Account");
 	}
 }
