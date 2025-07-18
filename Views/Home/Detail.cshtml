@@ -1,3 +1,4 @@
+@using System.Security.Claims
 @model EmployeeApp.Models.Employee
 
 @{
@@ -80,6 +81,13 @@
     <div class="mb-4">
         <a asp-action="Index" class="btn btn-secondary">戻る</a>
         <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-warning">編集</a>
-        <a asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-danger">削除</a>
+        @if (User.FindFirst(ClaimTypes.NameIdentifier).Value != Model.Id.ToString())
+            {
+                <form method="post" asp-action="Delete" asp-route-id="Model.Id" style="display:inline;">
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('本当に削除しますか？')">
+                        削除
+                    </button>
+                </form>
+            }
     </div>
 </div>

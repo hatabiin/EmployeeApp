@@ -1,4 +1,5 @@
-﻿@model IEnumerable<EmployeeApp.Models.Employee>
+﻿@using System.Security.Claims
+@model IEnumerable<EmployeeApp.Models.Employee>
 
 @{
     ViewData["Title"] = "Index";
@@ -58,11 +59,14 @@
                             <a asp-action="Detail" asp-route-id="@employee.Id" class="btn btn-secondary">詳細</a>
                             <a asp-action="Edit" asp-route-id="@employee.Id" class="btn btn-warning">編集</a>
                             <a asp-action="Create" class="btn btn-warning">新規登録</a>
-                            <form method="post" asp-action="Delete" asp-route-id="@employee.Id" style="display:inline;">
-                                <button type="submit" class="btn btn-danger" onclick="return confirm('本当に削除しますか？')">
-                                    削除
-                                </button>
-                            </form>
+                            @if (User.FindFirst(ClaimTypes.NameIdentifier).Value != employee.Id.ToString())
+                            {
+                                <form method="post" asp-action="Delete" asp-route-id="@employee.Id" style="display:inline;">
+                                    <button type="submit" class="btn btn-danger" onclick="return confirm('本当に削除しますか？')">
+                                        削除
+                                    </button>
+                                </form>
+                            }
                         </div>
                     </td>
                 </tr>
