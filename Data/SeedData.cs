@@ -46,54 +46,59 @@ namespace EmployeeApp.Data
                 context.Companies.Add(company);
                 context.SaveChanges();
 
-                // 部署データ
+                // 部署データ（3つに減らす）
                 var sales = new Department { CompanyId = company.Id, DepartmentName = "営業部" };
                 var dev = new Department { CompanyId = company.Id, DepartmentName = "開発部" };
                 var admin = new Department { CompanyId = company.Id, DepartmentName = "総務部" };
-                var planning = new Department { CompanyId = company.Id, DepartmentName = "企画部" };
-                var quality = new Department { CompanyId = company.Id, DepartmentName = "品質管理部" };
 
-                context.Departments.AddRange(sales, dev, admin, planning, quality);
+                context.Departments.AddRange(sales, dev, admin);
                 context.SaveChanges();
 
-                // 課データ
-                var sales1 = new Division { CompanyId = company.Id, DepartmentId = sales.Id, DivisionName = "営業1課" };
-                var sales2 = new Division { CompanyId = company.Id, DepartmentId = sales.Id, DivisionName = "営業2課" };
-                var overseas = new Division { CompanyId = company.Id, DepartmentId = sales.Id, DivisionName = "海外営業課" };
-                var system = new Division { CompanyId = company.Id, DepartmentId = dev.Id, DivisionName = "システム開発課" };
-                var web = new Division { CompanyId = company.Id, DepartmentId = dev.Id, DivisionName = "Web開発課" };
-                var mobile = new Division { CompanyId = company.Id, DepartmentId = dev.Id, DivisionName = "モバイル開発課" };
-                var hr = new Division { CompanyId = company.Id, DepartmentId = admin.Id, DivisionName = "人事課" };
-                var accounting = new Division { CompanyId = company.Id, DepartmentId = admin.Id, DivisionName = "経理課" };
-                var product = new Division { CompanyId = company.Id, DepartmentId = planning.Id, DivisionName = "商品企画課" };
-                var qa = new Division { CompanyId = company.Id, DepartmentId = quality.Id, DivisionName = "品質保証課" };
+                // 課データ - 各部署ごとに3種類の課を作成
+                var divisions = new List<Division>();
 
-                context.Divisions.AddRange(sales1, sales2, overseas, system, web, mobile, hr, accounting, product, qa);
+                // 営業部の課（3種類）
+                divisions.Add(new Division { CompanyId = company.Id, DepartmentId = sales.Id, DivisionName = "営業課" });
+                divisions.Add(new Division { CompanyId = company.Id, DepartmentId = sales.Id, DivisionName = "企画課" });
+                divisions.Add(new Division { CompanyId = company.Id, DepartmentId = sales.Id, DivisionName = "管理課" });
+
+                // 開発部の課（3種類）
+                divisions.Add(new Division { CompanyId = company.Id, DepartmentId = dev.Id, DivisionName = "営業課" });
+                divisions.Add(new Division { CompanyId = company.Id, DepartmentId = dev.Id, DivisionName = "企画課" });
+                divisions.Add(new Division { CompanyId = company.Id, DepartmentId = dev.Id, DivisionName = "管理課" });
+
+                // 総務部の課（3種類）
+                divisions.Add(new Division { CompanyId = company.Id, DepartmentId = admin.Id, DivisionName = "営業課" });
+                divisions.Add(new Division { CompanyId = company.Id, DepartmentId = admin.Id, DivisionName = "企画課" });
+                divisions.Add(new Division { CompanyId = company.Id, DepartmentId = admin.Id, DivisionName = "管理課" });
+
+                context.Divisions.AddRange(divisions);
                 context.SaveChanges();
 
-                // 資格データ
+                // 資格データ（3つに減らす）
                 var basicIT = new License { LicenseName = "基本情報技術者" };
-                var advancedIT = new License { LicenseName = "応用情報技術者" };
                 var boki2 = new License { LicenseName = "簿記2級" };
-                var boki1 = new License { LicenseName = "簿記1級" };
-                var toeic800 = new License { LicenseName = "TOEIC800点以上" };
-                var toeic900 = new License { LicenseName = "TOEIC900点以上" };
                 var license = new License { LicenseName = "普通自動車免許" };
-                var pmp = new License { LicenseName = "PMP(プロジェクトマネジメント)" };
 
-                context.Licenses.AddRange(basicIT, advancedIT, boki2, boki1, toeic800, toeic900, license, pmp);
+                context.Licenses.AddRange(basicIT, boki2, license);
                 context.SaveChanges();
 
                 // 社員データ（1人）
-                var testUser = new Employee { EmployeeName = "テストユーザー", PasswordHash = BCrypt.Net.BCrypt.HashPassword("test123") };
+                var testUser = new Employee 
+                { 
+                    EmployeeName = "テストユーザー", 
+                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("test123")
+                };
                 context.Employees.Add(testUser);
                 context.SaveChanges();
 
-                // 関連付け
-                testUser.Departments.Add(sales);
-                testUser.Divisions.Add(sales1);
+                // 関連付け（営業部の営業課に所属させる例）
+                var salesDept = context.Departments.First(d => d.DepartmentName == "営業部");
+                var salesDiv = context.Divisions.First(d => d.DepartmentId == salesDept.Id && d.DivisionName == "営業課");
+
+                testUser.Departments.Add(salesDept);
+                testUser.Divisions.Add(salesDiv);
                 testUser.Licenses.Add(basicIT);
-                testUser.Licenses.Add(license);
 
                 context.SaveChanges();
             }

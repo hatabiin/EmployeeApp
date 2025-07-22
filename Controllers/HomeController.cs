@@ -123,9 +123,11 @@ public class HomeController : Controller
             .Include(e => e.Licenses)
             .FirstOrDefaultAsync(e => e.Id == id);
 
-        ViewBag.AllDepartments = await _context.Departments.ToListAsync();
-        ViewBag.AllDivisions = await _context.Divisions.ToListAsync();
+        ViewBag.AllDepartments = await _context.Departments
+            .Include(d => d.Divisions) 
+            .ToListAsync();
         ViewBag.AllLicenses = await _context.Licenses.ToListAsync();
+        
         return View(employee);
     }
 
@@ -167,8 +169,9 @@ public class HomeController : Controller
 
         employee.Departments.Clear();
         var selectedDepartments = await _context.Departments
-                                    .Where(d => departmentIds.Contains(d.Id))
-                                    .ToListAsync();
+            .Where(d => departmentIds.Contains(d.Id))
+            .ToListAsync();
+        
         foreach (var dept in selectedDepartments)
         {
             employee.Departments.Add(dept);
@@ -176,8 +179,9 @@ public class HomeController : Controller
 
         employee.Divisions.Clear();
         var selectedDivisions = await _context.Divisions
-                                    .Where(d => divisionIds.Contains(d.Id))
-                                    .ToListAsync();
+            .Where(d => divisionIds.Contains(d.Id))
+            .ToListAsync();
+            
         foreach (var div in selectedDivisions)
         {
             employee.Divisions.Add(div);
