@@ -49,64 +49,53 @@
             </div>
         </div>
 
-        <div class="card mb-4">
-            <div class="card-header">
-                <h4>所属部署</h4>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    @{
-                        var currentDepartmentIds = Model.Departments.Select(d => d.Id).ToList();
-                    }
-                    @foreach (var dept in ViewBag.allDepartments)
-                    {
-                        <div class="col-md-6 col-lg-4 mb-2">
-                            <div class="form-check">
-                                <input class="form-check-input" 
-                                       type="checkbox" 
-                                       name="departmentIds" 
-                                       value="@dept.Id" 
-                                       id="dept_@dept.Id"
-                                       @(currentDepartmentIds.Contains(dept.Id) ? "checked" : "") />
-                                <label class="form-check-label" for="dept_@dept.Id">
-                                    @dept.DepartmentName
-                                </label>
-                            </div>
-                        </div>
-                    }
+<div class="card mb-4">
+    <div class="card-header">
+        <h4>所属部署・課（テスト）</h4>
+    </div>
+    <div class="card-body">
+        @{
+            var currentDepartmentIds = Model.Departments.Select(d => d.Id).ToList();
+            var currentDivisionIds = Model.Divisions.Select(d => d.Id).ToList();
+        }
+        
+        @foreach (var dept in ViewBag.AllDepartments)
+        {
+            <div class="mb-4">
+                <div class="form-check mb-2">
+                    <input class="form-check-input" 
+                           type="checkbox" 
+                           name="departmentIds" 
+                           value="@dept.Id" 
+                           id="dept_@dept.Id"
+                           @(currentDepartmentIds.Contains(dept.Id) ? "checked" : "") />
+                    <label class="form-check-label fw-bold" for="dept_@dept.Id">
+                        @dept.DepartmentName
+                    </label>
                 </div>
-            </div>
-        </div>
-
-        <div class="card mb-4">
-            <div class="card-header">
-                <h4>所属課</h4>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    @{
-                        var currentDivisionIds = Model.Divisions.Select(d => d.Id).ToList();
-                    }
-                    
-                    @foreach (var div in ViewBag.allDivisions)
+                
+                <div class="row ms-3">
+                    @foreach (var division in dept.Divisions)
                     {
-                        <div class="col-md-6 col-lg-4 mb-2">
+                        <div class="col-md-4 mb-2">
                             <div class="form-check">
                                 <input class="form-check-input" 
                                        type="checkbox" 
                                        name="divisionIds" 
-                                       value="@div.Id" 
-                                       id="div_@div.Id"
-                                       @(currentDivisionIds.Contains(div.Id) ? "checked" : "") />
-                                <label class="form-check-label" for="div_@div.Id">
-                                    @div.DivisionName
+                                       value="@division.Id" 
+                                       id="div_@division.Id"
+                                       @(currentDivisionIds.Contains(division.Id) ? "checked" : "") />
+                                <label class="form-check-label" for="div_@division.Id">
+                                    @division.DivisionName
                                 </label>
                             </div>
                         </div>
                     }
                 </div>
             </div>
-        </div>
+        }
+    </div>
+</div>
 
         <div class="card mb-4">
             <div class="card-header">
