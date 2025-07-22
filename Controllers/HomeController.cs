@@ -34,8 +34,9 @@ public class HomeController : Controller
     [HttpGet]
     public async Task<IActionResult> Create()
     {
-        ViewBag.AllDepartments = await _context.Departments.ToListAsync();
-        ViewBag.AllDivisions = await _context.Divisions.ToListAsync();
+        ViewBag.AllDepartments = await _context.Departments
+            .Include(d => d.Divisions)
+            .ToListAsync();
         ViewBag.AllLicenses = await _context.Licenses.ToListAsync();
         return View();
     }
@@ -48,12 +49,7 @@ public class HomeController : Controller
                                             int[] divisionIds,
                                             int[] licenseIds)
     {
-        Console.WriteLine("=== Create POST 開始 ===");
-    Console.WriteLine($"名前: '{employeeName}'");
-    Console.WriteLine($"newPassword: '{newPassword}'");
-    Console.WriteLine($"confirmPassword: '{confirmPassword}'");
-
-    
+         
         if (string.IsNullOrEmpty(newPassword) || string.IsNullOrEmpty(confirmPassword))
         {
             ViewBag.Error = "パスワードを入力してください";
