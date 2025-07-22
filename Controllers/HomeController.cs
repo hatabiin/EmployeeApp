@@ -209,6 +209,11 @@ public class HomeController : Controller
             .Include(e => e.Licenses)
             .FirstOrDefaultAsync(e => e.Id == id);
 
+        ViewBag.AllDepartments = await _context.Departments
+            .Include(d => d.Divisions) 
+            .ToListAsync();
+        ViewBag.AllLicenses = await _context.Licenses.ToListAsync();
+
         if (employee == null)
         {
             return NotFound();
