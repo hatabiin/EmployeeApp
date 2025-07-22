@@ -53,7 +53,7 @@
                 <div class="row">
                     @foreach (var dept in ViewBag.AllDepartments)
                     {
-                        <div class="col-md-6 col-lg-4 mb-2">
+                        <div class="mb-4">
                             <div class="form-check">
                                 <input class="form-check-input" 
                                        type="checkbox" 
@@ -64,33 +64,26 @@
                                     @dept.DepartmentName
                                 </label>
                             </div>
-                        </div>
-                    }
-                </div>
-            </div>
-        </div>
 
-        <div class="card mb-4">
-            <div class="card-header">
-                <h4>所属課</h4>
-            </div>
-            <div class="card-body">
-                <div class="row">
-                    @foreach (var div in ViewBag.AllDivisions)
-                    {
-                        <div class="col-md-6 col-lg-4 mb-2">
-                            <div class="form-check">
-                                <input class="form-check-input" 
-                                       type="checkbox" 
-                                       name="divisionIds" 
-                                       value="@div.Id" 
-                                       id="div_@div.Id" />
-                                <label class="form-check-label" for="div_@div.Id">
-                                    @div.DivisionName
-                                </label>
+                            <div class="row ms-3">
+                                @foreach (var division in dept.Divisions)
+                                {
+                                    <div class="col-md-4 mb-2">
+                                        <div class="form-check">
+                                            <input class="form-check-input" 
+                                                type="checkbox" 
+                                                name="divisionIds" 
+                                                value="@division.Id" 
+                                                id="div_@division.Id" />
+                                            <label class="form-check-label" for="div_@division.Id">
+                                                @division.DivisionName
+                                            </label>
+                                        </div>
+                                    </div>
+                                }
                             </div>
                         </div>
-                    }			
+                    }
                 </div>
             </div>
         </div>
