@@ -67,8 +67,9 @@ public class HomeController : BaseController
     [HttpGet]
     public async Task<IActionResult> Create()
     {
-        ViewBag.AllDepartments = await _context.Departments
-            .Include(d => d.Divisions)
+        ViewBag.AllCompanies = await _context.Companies
+            .Include(c => c.Departments)
+            .Include(c => c.Divisions)
             .ToListAsync();
         ViewBag.AllLicenses = await _context.Licenses.ToListAsync();
         return View();
@@ -78,6 +79,7 @@ public class HomeController : BaseController
     public async Task<IActionResult> Create(string employeeName,
                                             string newPassword,
                                             string confirmPassword,
+                                            int companyId,
                                             int[] departmentIds,
                                             int[] divisionIds,
                                             int[] licenseIds)
@@ -104,7 +106,8 @@ public class HomeController : BaseController
         var employee = new Employee
         {
             EmployeeName = employeeName,
-            PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword)
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword),
+            CompanyId = companyId
         };
 
         _context.Employees.Add(employee);
@@ -135,7 +138,7 @@ public class HomeController : BaseController
         }
 
         await _context.SaveChangesAsync();
-        return RedirectToAction("Index");
+        return RedirectToAction("Index", "Home");
     }
 
     [HttpGet]
