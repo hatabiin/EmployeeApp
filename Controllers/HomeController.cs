@@ -56,6 +56,9 @@ public class HomeController : BaseController
                 .Include(e => e.Divisions)
                 .Include(e => e.Licenses)
                 .ToListAsync();
+
+            ViewBag.SelectedCompany = await _context.Companies
+                .FindAsync(userCompanyId);
         }
         
         return View(employees);

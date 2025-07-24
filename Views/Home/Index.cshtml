@@ -12,6 +12,10 @@
             {
                 <h1>@ViewBag.SelectedCompany.CompanyName</h1>
             }
+            else
+            {
+                <h1>全社員</h1>
+            }
         </div>
         <div class="col-3">
             @if (ViewBag.Companies != null)
@@ -21,6 +25,7 @@
                             会社選択
                         </button>
                         <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" asp-controller="Home" asp-action="Index">全社員</a></li>
                             @foreach (var comp in ViewBag.Companies)
                             {
                                 <li>
