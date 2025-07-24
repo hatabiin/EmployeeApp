@@ -42,40 +42,66 @@ namespace EmployeeApp.Data
                 catch { }
 
                 // 会社データ
-                var company = new Company { CompanyName = "テックソリューション株式会社" };
-                context.Companies.Add(company);
+                var company1 = new Company { CompanyName = "AAA株式会社" };
+                var company2 = new Company { CompanyName = "BBB商事" };
+                var company3 = new Company { CompanyName = "CCC工業" };
+
+                context.Companies.AddRange(company1, company2, company3);
                 context.SaveChanges();
 
-                // 部署データ（3つに減らす）
-                var sales = new Department { CompanyId = company.Id, DepartmentName = "営業部" };
-                var dev = new Department { CompanyId = company.Id, DepartmentName = "開発部" };
-                var admin = new Department { CompanyId = company.Id, DepartmentName = "総務部" };
+                // 部署データ
+                var sales1 = new Department { CompanyId = company1.Id, DepartmentName = "営業部" };
+                var dev1 = new Department { CompanyId = company1.Id, DepartmentName = "開発部" };
+                var admin1 = new Department { CompanyId = company1.Id, DepartmentName = "総務部" };
 
-                context.Departments.AddRange(sales, dev, admin);
+                var sales2 = new Department { CompanyId = company2.Id, DepartmentName = "営業部" };
+                var dev2 = new Department { CompanyId = company2.Id, DepartmentName = "開発部" };
+                var admin2 = new Department { CompanyId = company2.Id, DepartmentName = "総務部" };
+
+                var sales3 = new Department { CompanyId = company3.Id, DepartmentName = "営業部" };
+                var dev3 = new Department { CompanyId = company3.Id, DepartmentName = "開発部" };
+                var admin3 = new Department { CompanyId = company3.Id, DepartmentName = "総務部" };
+
+                context.Departments.AddRange(
+                    sales1, dev1, admin1,
+                    sales2, dev2, admin2,
+                    sales3, dev3, admin3
+                );
                 context.SaveChanges();
 
-                // 課データ - 各部署ごとに3種類の課を作成
+                // 課データ
+                var companies = new[] { company1, company2, company3 };
+                var departmentsByCompany = new[]
+                {
+                    new[] { sales1, dev1, admin1 }, 
+                    new[] { sales2, dev2, admin2 },   
+                    new[] { sales3, dev3, admin3 }  
+                };
+                var divisionNames = new[] { "営業課", "企画課", "管理課" };
                 var divisions = new List<Division>();
 
-                // 営業部の課（3種類）
-                divisions.Add(new Division { CompanyId = company.Id, DepartmentId = sales.Id, DivisionName = "営業課" });
-                divisions.Add(new Division { CompanyId = company.Id, DepartmentId = sales.Id, DivisionName = "企画課" });
-                divisions.Add(new Division { CompanyId = company.Id, DepartmentId = sales.Id, DivisionName = "管理課" });
+                for (int i = 0; i < companies.Length; i++)
+                {
+                    var company = companies[i];
+                    var departments = departmentsByCompany[i];
 
-                // 開発部の課（3種類）
-                divisions.Add(new Division { CompanyId = company.Id, DepartmentId = dev.Id, DivisionName = "営業課" });
-                divisions.Add(new Division { CompanyId = company.Id, DepartmentId = dev.Id, DivisionName = "企画課" });
-                divisions.Add(new Division { CompanyId = company.Id, DepartmentId = dev.Id, DivisionName = "管理課" });
-
-                // 総務部の課（3種類）
-                divisions.Add(new Division { CompanyId = company.Id, DepartmentId = admin.Id, DivisionName = "営業課" });
-                divisions.Add(new Division { CompanyId = company.Id, DepartmentId = admin.Id, DivisionName = "企画課" });
-                divisions.Add(new Division { CompanyId = company.Id, DepartmentId = admin.Id, DivisionName = "管理課" });
-
+                    foreach (var dept in departments)
+                    {
+                        foreach (var divName in divisionNames)
+                        {
+                            divisions.Add(new Division
+                            {
+                                CompanyId = company.Id,
+                                DepartmentId = dept.Id,
+                                DivisionName = divName
+                            });
+                        }
+                    }
+                }
                 context.Divisions.AddRange(divisions);
                 context.SaveChanges();
 
-                // 資格データ（3つに減らす）
+                // 資格データ
                 var basicIT = new License { LicenseName = "基本情報技術者" };
                 var boki2 = new License { LicenseName = "簿記2級" };
                 var license = new License { LicenseName = "普通自動車免許" };
@@ -84,15 +110,37 @@ namespace EmployeeApp.Data
                 context.SaveChanges();
 
                 // 社員データ（1人）
-                var testUser = new Employee 
-                { 
-                    EmployeeName = "テストユーザー", 
-                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("test123")
+                var testUser = new Employee
+                {
+                    EmployeeName = "管理者ユーザー",
+                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("test123"),
+                    CompanyId = company1.Id
                 };
-                context.Employees.Add(testUser);
+
+                var bbbUser1 = new Employee 
+                { 
+                    EmployeeName = "BBB太郎", 
+                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("test123"),
+                    CompanyId = company2.Id 
+                };
+
+                var bbbUser2 = new Employee 
+                { 
+                    EmployeeName = "BBB花子", 
+                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("test123"),
+                    CompanyId = company2.Id 
+                };
+
+                var cccUser1 = new Employee 
+                { 
+                    EmployeeName = "CCC次郎", 
+                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("test123"),
+                    CompanyId = company3.Id  
+                };
+                context.Employees.AddRange(testUser, bbbUser1, bbbUser2, cccUser1);
                 context.SaveChanges();
 
-                // 関連付け（営業部の営業課に所属させる例）
+                // 関連付け
                 var salesDept = context.Departments.First(d => d.DepartmentName == "営業部");
                 var salesDiv = context.Divisions.First(d => d.DepartmentId == salesDept.Id && d.DivisionName == "営業課");
 

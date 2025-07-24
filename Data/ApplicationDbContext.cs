@@ -136,11 +136,17 @@ public partial class ApplicationDbContext : DbContext
 			entity.Property(e => e.PasswordHash)
 							.HasMaxLength(255)
 							.HasColumnName("password_hash");
+			entity.Property(e => e.CompanyId).HasColumnName("company_id");
+
 			entity.Property(e => e.UpdatedAt)
 							.ValueGeneratedOnAddOrUpdate()
 							.HasDefaultValueSql("CURRENT_TIMESTAMP")
 							.HasColumnType("timestamp")
 							.HasColumnName("updated_at");
+			
+			entity.HasOne(d => d.Company).WithMany(p => p.Employees)
+							.HasForeignKey(d => d.CompanyId)
+							.HasConstraintName("employees_ibfk_1");
 
 			entity.HasMany(d => d.Departments).WithMany(p => p.Employees)
 							.UsingEntity<Dictionary<string, object>>(

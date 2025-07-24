@@ -36,6 +36,18 @@ public class AccountController : Controller
 		{
 			var employee = _context
 			.Employees.FirstOrDefault(e => e.Id.ToString() == employeeId);
+
+			var CurrentCompanyId = employee.CompanyId;
+
+			if (employee.Id == 1)
+			{
+				HttpContext.Session.SetInt32("CurrentCompanyId", 1);
+			}
+			else
+			{
+	    		HttpContext.Session.SetInt32("CurrentCompanyId", CurrentCompanyId);
+			}
+
 			if (employee == null)
 			{
 				ViewBag.Error = "IDまたはパスワードがちがいます";
