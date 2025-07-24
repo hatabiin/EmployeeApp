@@ -20,6 +20,8 @@ builder.Services.AddAuthentication("Cookies")
         options.LogoutPath = "/Account/Logout";
     });
 
+builder.Services.AddSession();
+
 var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
@@ -44,6 +46,8 @@ app.UseRouting();
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+app.UseSession();
 
 app.MapControllerRoute(
     name: "default",

@@ -16,4 +16,6 @@ public partial class Company
     public virtual ICollection<Department> Departments { get; set; } = new List<Department>();
 
     public virtual ICollection<Division> Divisions { get; set; } = new List<Division>();
+
+    public virtual ICollection<Employee> Employees { get; set; } = new List<Employee>();
 }

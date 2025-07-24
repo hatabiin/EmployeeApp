@@ -6,7 +6,40 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">社員一覧</h1>
+    <div class="row align-items-center">
+        <div class="row align-items-center">
+            @if (ViewBag.SelectedCompany != null)
+            {
+                <h1>@ViewBag.SelectedCompany.CompanyName</h1>
+            }
+        </div>
+        <div class="col-3">
+            @if (ViewBag.Companies != null)
+                {
+                    <div class="dropdown-center">
+                       <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            会社選択
+                        </button>
+                        <ul class="dropdown-menu">
+                            @foreach (var comp in ViewBag.Companies)
+                            {
+                                <li>
+                                    <a class="dropdown-item"
+                                     asp-controller="Home"
+                                     asp-action="Index"
+                                     asp-route-companyId="@comp.Id">
+                                     @comp.CompanyName</a>
+                                </li>
+                            }
+                        </ul>
+                    </div>
+                }
+        </div>
+        <div class="col-6 text-center">
+            <h4 class="display-4">社員一覧</h4>
+        </div>
+    </div>
+    
     <a asp-action="Create" class="btn btn-primary btn-lg m-4">新規登録</a>
     <table class="table">
         <thead>

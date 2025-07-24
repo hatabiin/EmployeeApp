@@ -9,25 +9,55 @@ using Microsoft.EntityFrameworkCore;
 namespace EmployeeApp.Controllers;
 
 [Authorize]
-public class HomeController : Controller
+public class HomeController : BaseController
 {
     private readonly ILogger<HomeController> _logger;
 
-    private readonly ApplicationDbContext _context;
-
-    public HomeController(ILogger<HomeController> logger, ApplicationDbContext context)
+    public HomeController(ILogger<HomeController> logger, ApplicationDbContext context) : base(context)
     {
         _logger = logger;
-        _context = context;
     }
 
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(int? companyId)
     {
-        var employees = await _context.Employees
-            .Include(e => e.Departments)
-            .Include(e => e.Divisions)
-            .Include(e => e.Licenses)
-            .ToListAsync();
+        List<Employee>employees;
+
+        if (IsMasterUser())
+        {
+            ViewBag.Companies = await _context.Companies.ToListAsync();
+            if (companyId != null)
+            {
+                ViewBag.SelectedCompany = await _context.Companies
+                    .Where(c => c.Id == companyId)
+                    .FirstOrDefaultAsync();
+
+                employees = await _context.Employees
+                    .Where(e => e.CompanyId == companyId)
+                    .Include(e => e.Departments)
+                    .Include(e => e.Divisions)
+                    .Include(e => e.Licenses)
+                    .ToListAsync();
+            }
+            else
+            {
+                employees = await _context.Employees
+                    .Include(e => e.Departments)
+                    .Include(e => e.Divisions)
+                    .Include(e => e.Licenses)
+                    .ToListAsync();
+            }
+        }
+        else
+        {
+            var userCompanyId = await GetCurrentCompanyIdAsync();
+            employees = await _context.Employees
+                .Where(e => e.CompanyId == userCompanyId)
+                .Include(e => e.Departments)
+                .Include(e => e.Divisions)
+                .Include(e => e.Licenses)
+                .ToListAsync();
+        }
+        
         return View(employees);
     }
 
