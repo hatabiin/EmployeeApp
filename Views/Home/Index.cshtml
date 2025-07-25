@@ -51,6 +51,7 @@
             <tr>
                 <th>ID</th>
                 <th>社員名</th>
+                <th>会社名</th>
                 <th>部署名</th>
                 <th>課名</th>
                 <th>資格名</th>
@@ -63,6 +64,7 @@
                 <tr>
                     <td>@employee.Id</td>
                     <td>@employee.EmployeeName</td>
+                    <td>@employee.Company.CompanyName</td>
                     <td>@if (employee.Departments?.Any() == true)
                         {
                             @string.Join(", ", employee.Departments.Select(d => d.DepartmentName))
