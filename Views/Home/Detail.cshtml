@@ -22,45 +22,62 @@
 
     <div class="card mb-4">
         <div class="card-header">
-            <h4>所属部署・課</h4>
+            <h4>所属会社・部署・課</h4>
         </div>
         <div class="card-body">
             @{
+                var currentCompanyId = Model.Company?.Id;
                 var currentDepartmentIds = Model.Departments.Select(d => d.Id).ToList();
                 var currentDivisionIds = Model.Divisions.Select(d => d.Id).ToList();
             }
-            
-            @foreach (var dept in ViewBag.AllDepartments)
+
+            @foreach (var company in ViewBag.AllCompanies)
             {
                 <div class="mb-4">
                     <div class="form-check mb-2">
                         <input class="form-check-input" 
-                               type="checkbox" 
-                               id="dept_@dept.Id"
-                               style="pointer-events: none;"
-                               @(currentDepartmentIds.Contains(dept.Id) ? "checked" : "") />
-                        <label class="form-check-label fw-bold" for="dept_@dept.Id" style="pointer-events: none;">
-                            @dept.DepartmentName
+                            type="radio" 
+                            id="company_@company.Id"
+                            style="pointer-events: none;"
+                            @(currentCompanyId == company.Id ? "checked" : "") />
+                        <label class="form-check-label fw-bold" for="company_@company.Id">
+                            @company.CompanyName
                         </label>
                     </div>
-                    
-                    <div class="row ms-3">
-                        @foreach (var division in dept.Divisions)
-                        {
-                            <div class="col-md-4 mb-2">
-                                <div class="form-check">
-                                    <input class="form-check-input" 
-                                           type="checkbox" 
-                                           id="div_@division.Id"
-                                           style="pointer-events: none;"
-                                           @(currentDivisionIds.Contains(division.Id) ? "checked" : "") />
-                                    <label class="form-check-label" for="div_@division.Id" style="pointer-events: none;">
-                                        @division.DivisionName
-                                    </label>
-                                </div>
+            
+                    @foreach (var dept in company.Departments)
+                    {
+                        <div class="mb-4">
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" 
+                                    type="checkbox" 
+                                    id="dept_@dept.Id"
+                                    style="pointer-events: none;"
+                                    @(currentDepartmentIds.Contains(dept.Id) ? "checked" : "") />
+                                <label class="form-check-label fw-bold" for="dept_@dept.Id" style="pointer-events: none;">
+                                    @dept.DepartmentName
+                                </label>
                             </div>
-                        }
-                    </div>
+                            
+                            <div class="row ms-3">
+                                @foreach (var division in dept.Divisions)
+                                {
+                                    <div class="col-md-4 mb-2">
+                                        <div class="form-check">
+                                            <input class="form-check-input" 
+                                                type="checkbox" 
+                                                id="div_@division.Id"
+                                                style="pointer-events: none;"
+                                                @(currentDivisionIds.Contains(division.Id) ? "checked" : "") />
+                                            <label class="form-check-label" for="div_@division.Id" style="pointer-events: none;">
+                                                @division.DivisionName
+                                            </label>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    }
                 </div>
             }
         </div>

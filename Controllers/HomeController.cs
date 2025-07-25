@@ -246,12 +246,14 @@ public class HomeController : BaseController
         }
 
         var employee = await _context.Employees
+            .Include(e => e.Company)
             .Include(e => e.Departments)
             .Include(e => e.Divisions)
             .Include(e => e.Licenses)
             .FirstOrDefaultAsync(e => e.Id == id);
 
-        ViewBag.AllDepartments = await _context.Departments
+        ViewBag.AllCompanies = await _context.Companies
+            .Include(d => d.Departments)
             .Include(d => d.Divisions) 
             .ToListAsync();
         ViewBag.AllLicenses = await _context.Licenses.ToListAsync();
