@@ -44,40 +44,41 @@
                             @company.CompanyName
                         </label>
                     </div>
-            
-                    @foreach (var dept in company.Departments)
-                    {
-                        <div class="mb-4">
-                            <div class="form-check mb-2">
-                                <input class="form-check-input" 
-                                    type="checkbox" 
-                                    id="dept_@dept.Id"
-                                    style="pointer-events: none;"
-                                    @(currentDepartmentIds.Contains(dept.Id) ? "checked" : "") />
-                                <label class="form-check-label fw-bold" for="dept_@dept.Id" style="pointer-events: none;">
-                                    @dept.DepartmentName
-                                </label>
-                            </div>
-                            
-                            <div class="row ms-3">
-                                @foreach (var division in dept.Divisions)
-                                {
-                                    <div class="col-md-4 mb-2">
-                                        <div class="form-check">
-                                            <input class="form-check-input" 
-                                                type="checkbox" 
-                                                id="div_@division.Id"
-                                                style="pointer-events: none;"
-                                                @(currentDivisionIds.Contains(division.Id) ? "checked" : "") />
-                                            <label class="form-check-label" for="div_@division.Id" style="pointer-events: none;">
-                                                @division.DivisionName
-                                            </label>
+                    <div class="ms-3">
+                        @foreach (var dept in company.Departments)
+                        {
+                            <div class="mb-3">
+                                <div class="form-check mb-2">
+                                    <input class="form-check-input" 
+                                        type="checkbox" 
+                                        id="dept_@dept.Id"
+                                        style="pointer-events: none;"
+                                        @(currentDepartmentIds.Contains(dept.Id) ? "checked" : "") />
+                                    <label class="form-check-label fw-bold" for="dept_@dept.Id" style="pointer-events: none;">
+                                        @dept.DepartmentName
+                                    </label>
+                                </div>
+                                
+                                <div class="ms-3 d-flex flex-wrap">
+                                    @foreach (var division in dept.Divisions)
+                                    {
+                                        <div class="me-3 mb-2">
+                                            <div class="form-check">
+                                                <input class="form-check-input" 
+                                                    type="checkbox" 
+                                                    id="div_@division.Id"
+                                                    style="pointer-events: none;"
+                                                    @(currentDivisionIds.Contains(division.Id) ? "checked" : "") />
+                                                <label class="form-check-label" for="div_@division.Id" style="pointer-events: none;">
+                                                    @division.DivisionName
+                                                </label>
+                                            </div>
                                         </div>
-                                    </div>
-                                }
+                                    }
+                                </div>
                             </div>
-                        </div>
-                    }
+                        }
+                    </div>
                 </div>
             }
         </div>
