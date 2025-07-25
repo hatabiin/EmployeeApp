@@ -54,7 +54,6 @@
                 @foreach (var company in ViewBag.AllCompanies)
                 {
                     <div class="mb-4">
-                        <!-- 会社選択（ラジオボタン） -->
                         <div class="form-check mb-2">
                             <input class="form-check-input" 
                                 type="radio" 
@@ -66,12 +65,10 @@
                             </label>
                         </div>
                         
-                        <!-- その会社の部署・課 -->
                         <div class="ms-3">
                             @foreach (var dept in company.Departments)
                             {
                                 <div class="mb-3">
-                                    <!-- 部署選択（チェックボックス） -->
                                     <div class="form-check mb-2">
                                         <input class="form-check-input" 
                                             type="checkbox" 
@@ -83,7 +80,6 @@
                                         </label>
                                     </div>
                                     
-                                    <!-- その部署の課（チェックボックス） -->
                                     <div class="ms-3 d-flex flex-wrap">
                                         @foreach (var division in company.Divisions)
                                         {

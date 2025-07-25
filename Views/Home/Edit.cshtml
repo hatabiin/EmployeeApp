@@ -51,43 +51,63 @@
 
 <div class="card mb-4">
     <div class="card-header">
-        <h4>所属部署・課</h4>
+        <h4>所属会社・部署・課</h4>
     </div>
     <div class="card-body">
         @{
+            var currentCompanyId = Model.Company?.Id;
             var currentDepartmentIds = Model.Departments.Select(d => d.Id).ToList();
             var currentDivisionIds = Model.Divisions.Select(d => d.Id).ToList();
         }
-        
-        @foreach (var dept in ViewBag.AllDepartments)
+
+        @foreach (var company in ViewBag.AllCompanies)
         {
             <div class="mb-4">
                 <div class="form-check mb-2">
                     <input class="form-check-input" 
-                           type="checkbox" 
-                           name="departmentIds" 
-                           value="@dept.Id" 
-                           id="dept_@dept.Id"
-                           @(currentDepartmentIds.Contains(dept.Id) ? "checked" : "") />
-                    <label class="form-check-label fw-bold" for="dept_@dept.Id">
-                        @dept.DepartmentName
+                        type="radio" 
+                        name="companyId" 
+                        value="@company.Id" 
+                        id="company_@company.Id"
+                        @(currentCompanyId == company.Id ? "checked" : "") />
+                    <label class="form-check-label fw-bold" for="company_@company.Id">
+                        @company.CompanyName
                     </label>
                 </div>
-                
-                <div class="row ms-3">
-                    @foreach (var division in dept.Divisions)
+
+                <div class="ms-3">
+                    @foreach (var dept in company.Departments)
                     {
-                        <div class="col-md-4 mb-2">
-                            <div class="form-check">
+                        <div class="mb-4">
+                            <div class="form-check mb-2">
                                 <input class="form-check-input" 
-                                       type="checkbox" 
-                                       name="divisionIds" 
-                                       value="@division.Id" 
-                                       id="div_@division.Id"
-                                       @(currentDivisionIds.Contains(division.Id) ? "checked" : "") />
-                                <label class="form-check-label" for="div_@division.Id">
-                                    @division.DivisionName
+                                    type="checkbox" 
+                                    name="departmentIds" 
+                                    value="@dept.Id" 
+                                    id="dept_@dept.Id"
+                                    @(currentDepartmentIds.Contains(dept.Id) ? "checked" : "") />
+                                <label class="form-check-label fw-bold" for="dept_@dept.Id">
+                                    @dept.DepartmentName
                                 </label>
+                            </div>
+                            
+                            <div class="row ms-3">
+                                @foreach (var division in dept.Divisions)
+                                {
+                                    <div class="col-md-4 mb-2">
+                                        <div class="form-check">
+                                            <input class="form-check-input" 
+                                                type="checkbox" 
+                                                name="divisionIds" 
+                                                value="@division.Id" 
+                                                id="div_@division.Id"
+                                                @(currentDivisionIds.Contains(division.Id) ? "checked" : "") />
+                                            <label class="form-check-label" for="div_@division.Id">
+                                                @division.DivisionName
+                                            </label>
+                                        </div>
+                                    </div>
+                                }
                             </div>
                         </div>
                     }
