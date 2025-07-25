@@ -84,12 +84,30 @@ public class HomeController : BaseController
                                             int[] divisionIds,
                                             int[] licenseIds)
     {
-         
+        Console.WriteLine(employeeName);
+        Console.WriteLine(employeeName == null);
+        Console.WriteLine(employeeName == string.Empty);
+        Console.WriteLine(string.IsNullOrEmpty(employeeName));
+        
+
+        if (string.IsNullOrEmpty(employeeName))
+        {
+            ViewBag.Error = "氏名を入力してください";
+            ViewBag.AllCompanies = await _context.Companies
+                .Include(c => c.Departments)
+                .Include(c => c.Divisions)
+                .ToListAsync();
+            ViewBag.AllLicenses = await _context.Licenses.ToListAsync();
+            return View();
+        }
+        
         if (string.IsNullOrEmpty(newPassword) || string.IsNullOrEmpty(confirmPassword))
         {
             ViewBag.Error = "パスワードを入力してください";
-            ViewBag.AllDepartments = await _context.Departments.ToListAsync();
-            ViewBag.AllDivisions = await _context.Divisions.ToListAsync();
+            ViewBag.AllCompanies = await _context.Companies
+                .Include(c => c.Departments)
+                .Include(c => c.Divisions)
+                .ToListAsync();
             ViewBag.AllLicenses = await _context.Licenses.ToListAsync();
             return View();
         }
@@ -97,8 +115,21 @@ public class HomeController : BaseController
         if (newPassword != confirmPassword)
         {
             ViewBag.Error = "パスワードが異なります";
-            ViewBag.AllDepartments = await _context.Departments.ToListAsync();
-            ViewBag.AllDivisions = await _context.Divisions.ToListAsync();
+            ViewBag.AllCompanies = await _context.Companies 
+                .Include(c => c.Departments)
+                .Include(c => c.Divisions)
+                .ToListAsync();
+            ViewBag.AllLicenses = await _context.Licenses.ToListAsync();
+            return View();
+        }
+
+        if (companyId <= 0)
+        {
+            ViewBag.Error = "会社を選択してください";
+            ViewBag.AllCompanies = await _context.Companies
+                .Include(c => c.Departments)
+                .Include(c => c.Divisions)
+                .ToListAsync();
             ViewBag.AllLicenses = await _context.Licenses.ToListAsync();
             return View();
         }
@@ -187,13 +218,24 @@ public class HomeController : BaseController
             return NotFound();
         }
 
-        employee.EmployeeName = employeeName;
+        if (string.IsNullOrEmpty(employeeName))
+        {
+            ViewBag.Error = "氏名を入力してください";
+            ViewBag.AllCompanies = await _context.Companies
+                .Include(c => c.Departments)
+                .Include(c => c.Divisions)
+                .ToListAsync();
+            ViewBag.AllLicenses = await _context.Licenses.ToListAsync();
+            return View(employee);
+        }
 
         if (newPassword != confirmPassword)
         {
             ViewBag.Error = "パスワードが異なります";
-            ViewBag.AllDepartments = await _context.Departments.ToListAsync();
-            ViewBag.AllDivisions = await _context.Divisions.ToListAsync();
+            ViewBag.AllCompanies = await _context.Companies
+                .Include(c => c.Departments)
+                .Include(c => c.Divisions)
+                .ToListAsync();
             ViewBag.AllLicenses = await _context.Licenses.ToListAsync();
 			return View(employee);
         }
@@ -203,6 +245,7 @@ public class HomeController : BaseController
             employee.PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
         };
 
+        employee.EmployeeName = employeeName;
         employee.CompanyId = companyId;
 
         employee.Departments.Clear();
