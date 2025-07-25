@@ -109,7 +109,7 @@ namespace EmployeeApp.Data
                 context.Licenses.AddRange(basicIT, boki2, license);
                 context.SaveChanges();
 
-                // 社員データ（1人）
+                // 社員データ
                 var testUser = new Employee
                 {
                     EmployeeName = "管理者ユーザー",
