@@ -150,13 +150,15 @@ public class HomeController : BaseController
         }
 
         var employee = await _context.Employees
+            .Include(e => e.Company)
             .Include(e => e.Departments)
             .Include(e => e.Divisions)
             .Include(e => e.Licenses)
             .FirstOrDefaultAsync(e => e.Id == id);
 
-        ViewBag.AllDepartments = await _context.Departments
-            .Include(d => d.Divisions) 
+        ViewBag.AllCompanies = await _context.Companies
+            .Include(c => c.Departments)
+            .Include(c => c.Divisions) 
             .ToListAsync();
         ViewBag.AllLicenses = await _context.Licenses.ToListAsync();
         
@@ -168,11 +170,13 @@ public class HomeController : BaseController
                                           string employeeName,
                                           string newPassword,
                                           string confirmPassword,
+                                          int companyId,
                                           int[] departmentIds,
                                           int[] divisionIds,
                                           int[] licenseIds)
     {
         var employee = await _context.Employees
+            .Include(e => e.Company)
             .Include(e => e.Departments)
             .Include(e => e.Divisions)
             .Include(e => e.Licenses)
@@ -198,6 +202,8 @@ public class HomeController : BaseController
         {
             employee.PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
         };
+
+        employee.CompanyId = companyId;
 
         employee.Departments.Clear();
         var selectedDepartments = await _context.Departments
