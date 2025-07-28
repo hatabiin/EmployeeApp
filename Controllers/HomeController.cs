@@ -168,6 +168,25 @@ public class HomeController : BaseController
             employee.Licenses.Add(license);
         }
 
+        var invalidDepartments = selectedDepartments
+                                .Where(d => d.CompanyId != companyId)
+                                .ToList();
+
+        var invalidDivisions = selectedDivisions
+                                .Where(d => d.CompanyId != companyId)
+                                .ToList();
+
+        if (invalidDepartments.Any() || invalidDivisions.Any())
+        {
+            ViewBag.Error = "選択した会社以外の部署・課は選択できません";
+            ViewBag.AllCompanies = await _context.Companies 
+                .Include(c => c.Departments)
+                .Include(c => c.Divisions)
+                .ToListAsync();
+            ViewBag.AllLicenses = await _context.Licenses.ToListAsync();
+            return View();
+        }
+
         await _context.SaveChangesAsync();
         return RedirectToAction("Index", "Home");
     }
@@ -275,6 +294,25 @@ public class HomeController : BaseController
         foreach (var license in selectedLicenses)
         {
             employee.Licenses.Add(license);
+        }
+
+        var invalidDepartments = selectedDepartments
+                                .Where(d => d.CompanyId != companyId)
+                                .ToList();
+
+        var invalidDivisions = selectedDivisions
+                                .Where(d => d.CompanyId != companyId)
+                                .ToList();
+
+        if (invalidDepartments.Any() || invalidDivisions.Any())
+        {
+            ViewBag.Error = "選択した会社以外の部署・課は選択できません";
+            ViewBag.AllCompanies = await _context.Companies 
+                .Include(c => c.Departments)
+                .Include(c => c.Divisions)
+                .ToListAsync();
+            ViewBag.AllLicenses = await _context.Licenses.ToListAsync();
+            return View(employee);
         }
 
         await _context.SaveChangesAsync();
